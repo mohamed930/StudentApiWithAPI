@@ -3,6 +3,8 @@ using MongoDB.Driver;
 using test;
 using test.Connection;
 using test.Api.StudentRout;
+using test.Api.Studentroute;
+using test.Api.Courseroute;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,17 @@ builder.Services.AddSingleton<IMongoClient>(s =>
     new MongoClient(builder.Configuration.GetValue<string> ("StudentConnectionSetting:ConnectionString")));
 
 builder.Services.AddScoped<StudentProtocol, StudentRoute>();
+
+builder.Services.Configure<CoursesConnectionSetting>(
+    builder.Configuration.GetSection(nameof(CoursesConnectionSetting)));
+
+builder.Services.AddSingleton<CourseConnection>(sp =>
+    sp.GetRequiredService<IOptions<CoursesConnectionSetting>>().Value);
+
+builder.Services.AddSingleton<IMongoClient>(s =>
+    new MongoClient(builder.Configuration.GetValue<string>("CoursesConnectionSetting:ConnectionString")));
+
+builder.Services.AddScoped<CoursesProtocol, CourseRoute>();
 
 // Add services to the container.
 

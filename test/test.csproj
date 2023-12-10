@@ -17,6 +17,7 @@
     <None Remove="Api\" />
     <None Remove="Api\Student route\" />
     <None Remove="Controllers\" />
+    <None Remove="Api\Course route\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\" />
@@ -24,6 +25,7 @@
     <Folder Include="Api\" />
     <Folder Include="Api\Student route\" />
     <Folder Include="Controllers\" />
+    <Folder Include="Api\Course route\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Model\Student.cs">
