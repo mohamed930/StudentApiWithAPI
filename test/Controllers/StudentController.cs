@@ -17,33 +17,6 @@ namespace test.Controllers
             this.student = student;
         }
 
-        private object BaseResponse<T>(T obj)
-        {
-            var response = new
-            {
-                data = obj,
-                itemsCount = 1,
-                success = true,
-                statusCode = 200,
-                message = "Success"
-            };
-
-            return response;
-        }
-
-        private object BaseResponse<T>(List<T> obj)
-        {
-            var response = new
-            {
-                data = obj,
-                itemsCount = obj.Count,
-                success = true,
-                statusCode = 200,
-                message = "Success"
-            };
-
-            return response;
-        }
 
         // GET: api/values
         [HttpGet]
@@ -51,7 +24,7 @@ namespace test.Controllers
         {
             List<Student> result = student.GetAllStudents();
 
-            return Ok(BaseResponse(result));
+            return Ok(response.BaseResponse(result));
         }
 
         // GET api/values/5
@@ -60,16 +33,8 @@ namespace test.Controllers
         {
             Console.WriteLine($"The Id is {id}");
             if (id == "<string>" || id == null)
-            {
-                var response = new
-                {
-                    data = (object)null,
-                    success = false,
-                    statusCode = 403,
-                    message = "Failed to fetch Id"
-                };
-
-                return BadRequest(response);
+            { 
+                return Ok(response.BaseResponse(403, "Failed to fetch Id"));
             }
             else
             {
@@ -77,11 +42,11 @@ namespace test.Controllers
 
                 if (result == null)
                 {
-                    return NotFound($"Student with Id = {id} not found");
+                    return Ok(response.BaseResponse(404, $"Student with Id = {id} not found"));
                 }
                 else
                 {
-                    return Ok(BaseResponse(result));
+                    return Ok(response.BaseResponse(result));
                 }
             }
         }
@@ -92,21 +57,13 @@ namespace test.Controllers
         {
             if (student == null)
             {
-                var response = new
-                {
-                    data = (object)null,
-                    success = false,
-                    statusCode = 403,
-                    message = "Failed to fetch data from body"
-                };
-
-                return BadRequest(response);
+                return Ok(response.BaseResponse(403,"Failed to fetch data from body"));
             }
             else
             {
                 var createdStudent = this.student.Create(student);
 
-                return Ok(BaseResponse(createdStudent));
+                return Ok(response.BaseResponse(createdStudent));
             }
         }
 
@@ -120,26 +77,18 @@ namespace test.Controllers
             {
                 if (value == null)
                 {
-                    var response = new
-                    {
-                        data = (object)null,
-                        success = false,
-                        statusCode = 403,
-                        message = "Failed to fetch data from body"
-                    };
-
-                    return BadRequest(response);
+                    return Ok(response.BaseResponse(403, "Failed to fetch data from body"));
                 }
                 else
                 {
                     value.Id = id;
                     student.Update(id, value);
-                    return Ok(BaseResponse(value));
+                    return Ok(response.BaseResponse(value));
                 }
             }
             else
             {
-                return NotFound($"Student with Id = {id} not found");
+                return Ok(response.BaseResponse(404, $"Student with Id = {id} not found"));
             }
         }
 
@@ -152,20 +101,11 @@ namespace test.Controllers
             if (exsits != null)
             {
                 student.Remove(id);
-                var response = new
-                {
-                    data = (Object)null,
-                    itemsCount = 1,
-                    success = true,
-                    statusCode = 200,
-                    message = "Deleted Successfully"
-                };
-
-                return Ok(response);
+                return Ok(response.BaseResponse(200, "Deleted Successfully"));
             }
             else
             {
-                return NotFound($"Student with Id = {id} not found");
+                return Ok(response.BaseResponse(404, $"Student with Id = {id} not found"));
             }
         }
     }
