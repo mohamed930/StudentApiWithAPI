@@ -2,6 +2,7 @@
 
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Driver;
 
 namespace test.Model
 {
@@ -23,6 +24,15 @@ namespace test.Model
 
         [BsonElement("language")]
         public string Lang { get; set; }
+
+        [BsonRepresentation(BsonType.ObjectId)]
+        public List<String>? Students { get; set; }
+    }
+
+
+    public class CourseWithStudents : Courses
+    {
+        public List<Student> StudentsData { get; set; }
     }
 }
 

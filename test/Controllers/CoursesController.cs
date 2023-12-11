@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
 using test.Api.Studentroute;
 using test.Model;
@@ -11,6 +12,13 @@ using test.Model;
 
 namespace test.Controllers
 {
+
+    public class CourseRequest
+    {
+        public string courseId { get; set; }
+        public string studentId { get; set; }
+    }
+
     [Route("api/[controller]")]
     public class CoursesController : Controller
     {
@@ -23,16 +31,16 @@ namespace test.Controllers
 
         // GET: api/values
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> GetAsync()
         {
-            List<Courses> result = course.getAllCourses();
+            List<CourseWithStudents> result = await course.GetAllCoursesAsync();
 
             return Ok(response.BaseResponse(result));
         }
 
         // GET: api/values
         [HttpGet("{id}")]
-        public IActionResult Get(String id)
+        public async Task<IActionResult> GetSpecificAsync(string id)
         {
             if (id == null || id == "<string>")
             {
@@ -42,7 +50,8 @@ namespace test.Controllers
             {
                 if (IsHex24Digits(id))
                 {
-                    return Ok(response.BaseResponse(course.getCourse(id)));
+                    var course = await this.course.getCourse(id);
+                    return Ok(response.BaseResponse(course));
                 }
                 else
                 {
@@ -64,6 +73,36 @@ namespace test.Controllers
             {
                 this.course.create(course);
                 return Ok(response.BaseResponse(course));
+            }
+        }
+
+        // PUT: api/values
+        [HttpPut]
+        public IActionResult Put([FromBody] CourseRequest request)
+        {
+            if (request == null)
+            {
+                return Ok(response.BaseResponse(403, "Error in build parameters"));
+            }
+            else
+            {
+                if (!IsHex24Digits(request.courseId) || !IsHex24Digits(request.studentId))
+                {
+                    return Ok(response.BaseResponse(403, "Error in build parameters"));
+                }
+                else
+                {
+                    var result = course.getCourse(request.courseId);
+                    if (result == null)
+                    {
+                        return Ok(response.BaseResponse(404, "Course not found!!"));
+                    }
+                    else
+                    {
+                        course.buyTheCourse(request.courseId, request.studentId);
+                        return Ok(response.BaseResponse(201, "course bought successfully"));
+                    }
+                }
             }
         }
 

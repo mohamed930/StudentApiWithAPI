@@ -7,8 +7,9 @@ namespace test.Api.Studentroute
 	public interface CoursesProtocol
 	{
 		Courses create(Courses course);
-		List<Courses> getAllCourses();
-		Courses getCourse(string id);
+        Task<List<CourseWithStudents>> GetAllCoursesAsync();
+        Task<CourseWithStudents> getCourse(string id);
+		void buyTheCourse(string id, string studentId);
 	}
 }
 

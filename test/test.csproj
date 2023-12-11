@@ -18,6 +18,8 @@
     <None Remove="Api\Student route\" />
     <None Remove="Controllers\" />
     <None Remove="Api\Course route\" />
+    <None Remove="Connection\CourseConnection\" />
+    <None Remove="Connection\StudentConnection\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\" />
@@ -26,6 +28,8 @@
     <Folder Include="Api\Student route\" />
     <Folder Include="Controllers\" />
     <Folder Include="Api\Course route\" />
+    <Folder Include="Connection\CourseConnection\" />
+    <Folder Include="Connection\StudentConnection\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Model\Student.cs">
